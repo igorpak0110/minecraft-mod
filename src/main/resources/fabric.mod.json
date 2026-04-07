@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "oppickaxe",
+  "version": "${version}",
+  "name": "Super OP Pickaxe",
+  "description": "Adds a ridiculously overpowered pickaxe that instant-breaks blocks in a 3x3 area.",
+  "authors": ["You"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.example.oppickaxe.OpPickaxeMod"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
