@@ -1,13 +1,8 @@
 {
   "feature": "oppickaxe:candy_surface",
   "placement": [
-    {
-      "type": "minecraft:count",
-      "count": 20
-    },
-    {
-      "type": "minecraft:in_square"
-    },
+    {"type": "minecraft:count", "count": 20},
+    {"type": "minecraft:in_square"},
     {
       "type": "minecraft:height_range",
       "height": {
@@ -15,9 +10,6 @@
         "min_inclusive": {"absolute": 58},
         "max_inclusive": {"absolute": 72}
       }
-    },
-    {
-      "type": "minecraft:biome"
     }
   ]
 }
