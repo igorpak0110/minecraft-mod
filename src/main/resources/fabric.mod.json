@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "id": "oppickaxe",
   "version": "${version}",
-  "name": "Super OP Pickaxe",
-  "description": "Adds a ridiculously overpowered pickaxe that instant-breaks blocks in a 3x3 area.",
-  "authors": ["You"],
+  "name": "IgorPak's Minecraft Mods",
+  "description": "A collection of custom Minecraft mods by IgorPak.",
+  "authors": ["IgorPak"],
   "license": "MIT",
   "environment": "*",
   "entrypoints": {
