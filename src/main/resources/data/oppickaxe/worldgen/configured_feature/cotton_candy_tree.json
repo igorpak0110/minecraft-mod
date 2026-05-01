@@ -28,6 +28,7 @@
       "type": "minecraft:simple_state_provider",
       "state": {"Name": "minecraft:pink_concrete"}
     },
+    "decorators": [],
     "ignore_vines": true,
     "force_dirt": false
   }
