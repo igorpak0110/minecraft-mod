@@ -28,5 +28,5 @@
   },
   "spawn_costs": {},
   "carvers": {},
-  "features": [[], [], [], [], [], [], [], [], [], []]
+  "features": [[], [], [], [], [], [], ["oppickaxe:candy_surface"], [], [], []]
 }
