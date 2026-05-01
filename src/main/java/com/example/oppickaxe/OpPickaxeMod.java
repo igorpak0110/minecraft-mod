@@ -21,6 +21,5 @@ public class OpPickaxeMod implements ModInitializer {
     public void onInitialize() {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> entries.add(SUPER_OP_PICKAXE));
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> entries.add(SUPER_OP_PICKAXE));
-        CandylandBiomes.register();
     }
 }
