@@ -21,6 +21,7 @@ public class CandylandRegion extends Region {
     public void addBiomes(Registry<Biome> registry, Consumer<Pair<MultiNoiseUtil.NoiseHypercube, RegistryKey<Biome>>> mapper) {
         addModifiedVanillaOverworldBiomes(mapper, builder -> {
             builder.replaceBiome(BiomeKeys.DESERT, CandylandBiomes.CANDYLAND);
+            builder.replaceBiome(BiomeKeys.SAVANNA, CandylandBiomes.CANDYLAND);
         });
     }
 }

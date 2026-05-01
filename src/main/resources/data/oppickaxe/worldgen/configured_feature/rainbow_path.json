@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:random_patch",
+  "config": {
+    "tries": 4,
+    "xz_spread": 7,
+    "y_spread": 0,
+    "feature": {
+      "feature": {
+        "type": "minecraft:simple_block",
+        "config": {
+          "to_place": {
+            "type": "minecraft:weighted_state_provider",
+            "entries": [
+              {"weight": 1, "data": {"Name": "minecraft:red_concrete"}},
+              {"weight": 1, "data": {"Name": "minecraft:orange_concrete"}},
+              {"weight": 1, "data": {"Name": "minecraft:yellow_concrete"}},
+              {"weight": 1, "data": {"Name": "minecraft:lime_concrete"}},
+              {"weight": 1, "data": {"Name": "minecraft:light_blue_concrete"}},
+              {"weight": 1, "data": {"Name": "minecraft:purple_concrete"}}
+            ]
+          }
+        }
+      },
+      "placement": [
+        {"type": "minecraft:surface_water_depth_filter", "max_water_depth": 0},
+        {"type": "minecraft:block_predicate_filter", "predicate": {"type": "minecraft:would_survive", "state": {"Name": "minecraft:short_grass"}}},
+        {"type": "minecraft:biome"}
+      ]
+    }
+  }
+}
