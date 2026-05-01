@@ -8,12 +8,14 @@
   "license": "MIT",
   "environment": "*",
   "entrypoints": {
-    "main": ["com.example.oppickaxe.OpPickaxeMod"]
+    "main": ["com.example.oppickaxe.OpPickaxeMod"],
+    "terrablender": ["com.example.oppickaxe.CandylandBiomes"]
   },
   "depends": {
     "fabricloader": ">=0.16.0",
     "minecraft": "~1.21.1",
     "java": ">=21",
-    "fabric-api": "*"
+    "fabric-api": "*",
+    "terrablender": "*"
   }
 }
