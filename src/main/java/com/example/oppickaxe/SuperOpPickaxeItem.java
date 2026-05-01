@@ -15,17 +15,12 @@ import net.minecraft.entity.player.PlayerEntity;
 
 public class SuperOpPickaxeItem extends PickaxeItem {
     public SuperOpPickaxeItem(Settings settings) {
-        super(SuperOpToolMaterial.INSTANCE, 10.0F, -2.4F, settings);
+        super(SuperOpToolMaterial.INSTANCE, settings);
     }
 
     @Override
     public float getMiningSpeed(ItemStack stack, BlockState state) {
         return 100.0F;
-    }
-
-    @Override
-    public boolean isSuitableFor(BlockState state) {
-        return true;
     }
 
     @Override
