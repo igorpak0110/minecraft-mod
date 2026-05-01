@@ -1,7 +1,5 @@
 package com.example.oppickaxe;
 
-import net.fabricmc.fabric.api.biome.v1.OverworldBiomes;
-import net.fabricmc.fabric.api.biome.v1.OverworldClimate;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
@@ -14,6 +12,7 @@ public class CandylandBiomes {
     );
 
     public static void register() {
-        OverworldBiomes.addContinentalBiome(CANDYLAND, OverworldClimate.TEMPERATE, 2.0);
+        // Biome is registered via data/oppickaxe/worldgen/biome/candyland.json
+        // Apply in-game with: /fillbiome ~ ~ ~ ~50 ~10 ~50 oppickaxe:candyland
     }
 }
