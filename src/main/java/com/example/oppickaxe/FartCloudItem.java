@@ -1,9 +1,9 @@
 package com.example.oppickaxe;
 
+import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
@@ -27,8 +27,9 @@ public class FartCloudItem extends Item {
             cloud.addEffect(new StatusEffectInstance(StatusEffects.POISON, 100, 0));
             cloud.addEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 100, 1));
             world.spawnEntity(cloud);
+            // Fart sound on impact
             world.playSound(null, user.getX(), user.getY(), user.getZ(),
-                    SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 1.0f, 0.3f);
+                    SoundEvents.ENTITY_COW_HURT, SoundCategory.PLAYERS, 1.0f, 0.3f);
             if (!user.getAbilities().creativeMode) {
                 stack.decrement(1);
             }
