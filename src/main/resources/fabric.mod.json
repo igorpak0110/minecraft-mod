@@ -9,6 +9,7 @@
   "environment": "*",
   "entrypoints": {
     "main": ["com.example.oppickaxe.OpPickaxeMod"],
+    "client": ["com.example.oppickaxe.ClientInit"],
     "terrablender": ["com.example.oppickaxe.CandylandBiomes"]
   },
   "depends": {
