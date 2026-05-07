@@ -1,5 +1,1 @@
 accessWidener   v2   named
-
-# Allow UnicornHornFeatureRenderer to access horse model parts for horn attachment
-accessible  field   net/minecraft/client/render/entity/model/AbstractHorseEntityModel   body    Lnet/minecraft/client/model/ModelPart;
-accessible  field   net/minecraft/client/render/entity/model/AbstractHorseEntityModel   head    Lnet/minecraft/client/model/ModelPart;

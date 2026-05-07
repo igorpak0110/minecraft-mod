@@ -12,11 +12,11 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.model.AbstractHorseEntityModel;
 import net.minecraft.client.render.entity.model.HorseEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.RotationAxis;
 
 public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, HorseEntityModel<HorseEntity>> {
     private static final Identifier HORN_TEXTURE =
@@ -26,10 +26,9 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
 
     public UnicornHornFeatureRenderer(FeatureRendererContext<HorseEntity, HorseEntityModel<HorseEntity>> context) {
         super(context);
-
-        // Build a simple horn: 2×12×2 pixels, UV on 16×16 sheet
         ModelData modelData = new ModelData();
         ModelPartData root = modelData.getRoot();
+        // 2×12×2 pixel horn, UV on 16×16 sheet
         root.addChild("horn",
                 ModelPartBuilder.create().uv(0, 0).cuboid(-1f, -12f, -1f, 2, 12, 2),
                 ModelTransform.NONE);
@@ -42,31 +41,27 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
                        float tickDelta, float animationProgress, float headYaw, float headPitch) {
         if (entity.isBaby()) return;
 
-        // Cast to AbstractHorseEntityModel to access the body and head_parts model parts
-        // (made accessible via oppickaxe.accesswidener)
-        AbstractHorseEntityModel<HorseEntity> horseModel =
-                (AbstractHorseEntityModel<HorseEntity>) this.getContextModel();
-
         matrices.push();
 
-        // Walk the model tree exactly as the renderer does, so the horn follows head rotation.
-        // body.rotate() applies body pivot (0, 11, 5 px) relative to model root.
-        // head.rotate() applies head_parts pivot (0, 4, -12 px) relative to body,
-        // PLUS the dynamic yaw/pitch set by setAngles() (includes 30° base pitch).
-        horseModel.body.rotate(matrices);
-        horseModel.head.rotate(matrices);
+        // In the feature renderer, the coordinate space is:
+        //   1 unit = 1 block, positive-Y = world-DOWN (due to scale(-1,-1,1) in LivingEntityRenderer).
+        // The model root sits ~1.5 blocks above entity feet.
+        // Horse head-parts pivot is at (0, 15px, -7px) from model root = (0, 0.9375, -0.4375) blocks.
+        // Head top (y=-11 from head_parts) is at matrix-Y ≈ 0.25 = world ~1.25 blocks above feet.
+        // Translate to just above the forehead so the horn sticks out clearly.
+        matrices.translate(0.0f, 0.22f, -0.52f);
 
-        // We are now in head_parts local space (block units, since ModelPart.rotate()
-        // already divides pivots by 16). Scale to pixel space for rendering.
+        // Follow head rotation (30° base pitch of horse head + dynamic angles)
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(headYaw));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotation(
+                0.5236f + headPitch * (float) Math.PI / 180f));
+
+        // Scale from block-space to model-pixel-space for the horn geometry
         float s = 1.0f / 16.0f;
         matrices.scale(s, s, s);
 
-        // Position horn at the forehead:
-        // head cube spans y=-11 to y=-6 (top at y=-11), front at z=-2.
-        // Place horn base at the top-front of the head.
-        matrices.translate(0.0f, -11.0f, -2.0f);
-
-        // Horn cuboid: base at y=0, tip at y=-12 (points upward in model space = visually up).
+        // Render: cuboid base at y=0, tip at y=-12.
+        // Negative-Y in pixel-space → less positive in matrix-Y → higher in world → horn points UP.
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(
                 RenderLayer.getEntityCutoutNoCull(HORN_TEXTURE));
         horn.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
