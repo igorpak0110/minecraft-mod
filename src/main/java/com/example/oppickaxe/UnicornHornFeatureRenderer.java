@@ -26,11 +26,12 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
 
     public UnicornHornFeatureRenderer(FeatureRendererContext<HorseEntity, HorseEntityModel<HorseEntity>> context) {
         super(context);
-        // Big horn: 6×18×6 px → 0.375×1.125×0.375 blocks (ModelPart.Cuboid divides by 16 internally).
+        // Proportional horn: 4×10×4 px → 0.25×0.625×0.25 blocks
+        // (about 2× the head's height, matches typical unicorn-horn proportions)
         ModelData modelData = new ModelData();
         ModelPartData root = modelData.getRoot();
         root.addChild("horn",
-                ModelPartBuilder.create().uv(0, 0).cuboid(-3f, -18f, -3f, 6, 18, 6),
+                ModelPartBuilder.create().uv(0, 0).cuboid(-2f, -10f, -2f, 4, 10, 4),
                 ModelTransform.NONE);
         this.horn = TexturedModelData.of(modelData, 32, 32).createModel().getChild("horn");
     }
