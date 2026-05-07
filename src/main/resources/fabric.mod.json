@@ -8,6 +8,9 @@
   "license": "MIT",
   "environment": "*",
   "accessWidener": "oppickaxe.accesswidener",
+  "mixins": [
+    "oppickaxe.mixins.json"
+  ],
   "entrypoints": {
     "main": ["com.example.oppickaxe.OpPickaxeMod"],
     "client": ["com.example.oppickaxe.ClientInit"],

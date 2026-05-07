@@ -1,5 +1,6 @@
 package com.example.oppickaxe;
 
+import com.example.oppickaxe.mixin.HorseEntityModelAccessor;
 import net.minecraft.client.model.ModelData;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.model.ModelPartBuilder;
@@ -16,7 +17,6 @@ import net.minecraft.client.render.entity.model.HorseEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
 
 public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, HorseEntityModel<HorseEntity>> {
     private static final Identifier HORN_TEXTURE =
@@ -26,9 +26,9 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
 
     public UnicornHornFeatureRenderer(FeatureRendererContext<HorseEntity, HorseEntityModel<HorseEntity>> context) {
         super(context);
+        // Big horn: 6×18×6 px → 0.375×1.125×0.375 blocks (ModelPart.Cuboid divides by 16 internally).
         ModelData modelData = new ModelData();
         ModelPartData root = modelData.getRoot();
-        // Big horn: 6×18×6 px = 0.375×1.125×0.375 blocks
         root.addChild("horn",
                 ModelPartBuilder.create().uv(0, 0).cuboid(-3f, -18f, -3f, 6, 18, 6),
                 ModelTransform.NONE);
@@ -41,21 +41,31 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
                        float tickDelta, float animationProgress, float headYaw, float headPitch) {
         if (entity.isBaby()) return;
 
+        HorseEntityModelAccessor accessor = (HorseEntityModelAccessor) this.getContextModel();
+        ModelPart body = accessor.getBody();
+        ModelPart head = accessor.getHead();
+
         matrices.push();
 
-        // Origin (0,0,0) is at the horse's back. Translate to the forehead:
-        //   Y: -0.55 → up high enough to clear head top
-        //   Z: -0.85 → well forward into the head (−0.50 lands at the head/neck junction)
-        matrices.translate(0.0f, -0.55f, -0.90f);
+        // Walk the model tree exactly as the renderer does:
+        //   body.rotate() applies body pivot+rotation,
+        //   head.rotate() applies head_parts pivot+rotation (incl. setAngles' yaw/pitch
+        //   AND any grazing/jumping animation already applied to the field).
+        // After both, we are anchored at the head_parts pivot in the head's local frame.
+        body.rotate(matrices);
+        head.rotate(matrices);
 
-        // Rotate with the head so the horn follows where the unicorn looks.
-        // headYaw / headPitch arrive in degrees.
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(headYaw));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(headPitch));
-
-        // Scale from block units to model-pixel units for the horn cuboid
-        float s = 1.0f / 16.0f;
-        matrices.scale(s, s, s);
+        // ModelPart renders in block units (Cuboid stores vertices pre-divided by 16),
+        // so NO additional scale is needed here. That was the bug making the horn tiny.
+        //
+        // The head cube extends in head-local pixel space:
+        //   y = -11 .. -6  (top..bottom of head)
+        //   z = -2 .. 5    (front..back of head)
+        // → block space: y = -0.6875 .. -0.375,  z = -0.125 .. 0.3125
+        //
+        // Place the horn just above the top of the head, at the front (forehead).
+        // Translate to (0, -0.7, -0.05) in head-local block space.
+        matrices.translate(0.0f, -0.7f, -0.05f);
 
         VertexConsumer vc = vertexConsumers.getBuffer(
                 RenderLayer.getEntityCutoutNoCull(HORN_TEXTURE));
