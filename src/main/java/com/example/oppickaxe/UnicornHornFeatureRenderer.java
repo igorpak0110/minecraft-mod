@@ -63,7 +63,7 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
         // Translate up well past the head top so the horn BASE sits on the forehead surface.
         // y: -1.10 → ~0.4 blocks above head top
         // z: -0.10 → just inside the front face of the head (forehead)
-        matrices.translate(0.0f, -1.10f, -0.10f);
+        matrices.translate(0.0f, -0.85f, -0.25f);
 
         VertexConsumer vc = vertexConsumers.getBuffer(
                 RenderLayer.getEntityCutoutNoCull(HORN_TEXTURE));
