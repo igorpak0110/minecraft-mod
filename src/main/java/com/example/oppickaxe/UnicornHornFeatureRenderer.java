@@ -16,6 +16,7 @@ import net.minecraft.client.render.entity.model.HorseEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.RotationAxis;
 
 public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, HorseEntityModel<HorseEntity>> {
     private static final Identifier HORN_TEXTURE =
@@ -27,9 +28,9 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
         super(context);
         ModelData modelData = new ModelData();
         ModelPartData root = modelData.getRoot();
-        // Big cuboid: 4×16×4 pixels — to be scaled by 1/16 → 0.25×1×0.25 blocks
+        // Slim horn: 2×12×2 px = 0.125×0.75×0.125 blocks after scale
         root.addChild("horn",
-                ModelPartBuilder.create().uv(0, 0).cuboid(-2f, -16f, -2f, 4, 16, 4),
+                ModelPartBuilder.create().uv(0, 0).cuboid(-1f, -12f, -1f, 2, 12, 2),
                 ModelTransform.NONE);
         this.horn = TexturedModelData.of(modelData, 16, 16).createModel().getChild("horn");
     }
@@ -40,14 +41,26 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
                        float tickDelta, float animationProgress, float headYaw, float headPitch) {
         if (entity.isBaby()) return;
 
-        // DEBUG: render at entity origin with NO translate, just scale.
-        // The horn is 4×16×4 px so after scale(1/16) it's 0.25×1×0.25 blocks.
-        // Whatever shows up tells us where "0,0,0" is in the feature-renderer space.
         matrices.push();
+
+        // Origin (0,0,0) is at the horse's back. Translate to the forehead:
+        //   Y: -0.30 → up to head top (negative Y = up after the LivingEntityRenderer Y-flip)
+        //   Z: -0.70 → forward toward the snout (-Z is the horse's forward direction)
+        matrices.translate(0.0f, -0.30f, -0.70f);
+
+        // Rotate with the head so the horn follows where the unicorn looks.
+        // headYaw / headPitch arrive in degrees.
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(headYaw));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(headPitch));
+
+        // Scale from block units to model-pixel units for the horn cuboid
         float s = 1.0f / 16.0f;
         matrices.scale(s, s, s);
-        VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(HORN_TEXTURE));
+
+        VertexConsumer vc = vertexConsumers.getBuffer(
+                RenderLayer.getEntityCutoutNoCull(HORN_TEXTURE));
         horn.render(matrices, vc, light, OverlayTexture.DEFAULT_UV);
+
         matrices.pop();
     }
 }
