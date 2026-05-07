@@ -28,9 +28,9 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
         super(context);
         ModelData modelData = new ModelData();
         ModelPartData root = modelData.getRoot();
-        // Slim horn: 2×12×2 px = 0.125×0.75×0.125 blocks after scale
+        // Chunkier horn: 4×12×4 px = 0.25×0.75×0.25 blocks
         root.addChild("horn",
-                ModelPartBuilder.create().uv(0, 0).cuboid(-1f, -12f, -1f, 2, 12, 2),
+                ModelPartBuilder.create().uv(0, 0).cuboid(-2f, -12f, -2f, 4, 12, 4),
                 ModelTransform.NONE);
         this.horn = TexturedModelData.of(modelData, 16, 16).createModel().getChild("horn");
     }
@@ -44,9 +44,9 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
         matrices.push();
 
         // Origin (0,0,0) is at the horse's back. Translate to the forehead:
-        //   Y: -0.45 → up onto/above the head top (negative Y = up after Y-flip)
-        //   Z: -0.50 → forward toward the forehead (-Z = horse forward; +Z lands on the butt)
-        matrices.translate(0.0f, -0.45f, -0.50f);
+        //   Y: -0.55 → up high enough to clear head top
+        //   Z: -0.85 → well forward into the head (−0.50 lands at the head/neck junction)
+        matrices.translate(0.0f, -0.55f, -0.85f);
 
         // Rotate with the head so the horn follows where the unicorn looks.
         // headYaw / headPitch arrive in degrees.
