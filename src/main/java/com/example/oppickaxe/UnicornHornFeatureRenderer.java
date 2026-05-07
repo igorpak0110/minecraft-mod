@@ -25,9 +25,9 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
 
     public UnicornHornFeatureRenderer(FeatureRendererContext<HorseEntity, HorseEntityModel<HorseEntity>> context) {
         super(context);
-        // DEBUG: Big obvious horn — 4×16×4 pixels (0.25×1×0.25 blocks).
         ModelData modelData = new ModelData();
         ModelPartData root = modelData.getRoot();
+        // Big cuboid: 4×16×4 pixels — to be scaled by 1/16 → 0.25×1×0.25 blocks
         root.addChild("horn",
                 ModelPartBuilder.create().uv(0, 0).cuboid(-2f, -16f, -2f, 4, 16, 4),
                 ModelTransform.NONE);
@@ -40,15 +40,12 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
                        float tickDelta, float animationProgress, float headYaw, float headPitch) {
         if (entity.isBaby()) return;
 
-        // DEBUG: render the horn at the model root with NO rotation, scaled to pixel space.
-        // If positive matrix-Y = world-DOWN (post-flip), then translating by negative-Y
-        // pushes the horn UP in world space. Try -1.5 → 1.5 blocks above model root.
+        // DEBUG: render at entity origin with NO translate, just scale.
+        // The horn is 4×16×4 px so after scale(1/16) it's 0.25×1×0.25 blocks.
+        // Whatever shows up tells us where "0,0,0" is in the feature-renderer space.
         matrices.push();
-        matrices.translate(0.0f, -1.5f, 0.0f);
-
         float s = 1.0f / 16.0f;
         matrices.scale(s, s, s);
-
         VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(HORN_TEXTURE));
         horn.render(matrices, vc, light, OverlayTexture.DEFAULT_UV);
         matrices.pop();
