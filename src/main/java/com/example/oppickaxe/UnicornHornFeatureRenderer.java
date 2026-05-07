@@ -66,7 +66,7 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
         //
         // Place the horn just above the top of the head, at the front (forehead).
         // Translate to (0, -0.7, -0.05) in head-local block space.
-        matrices.translate(0.0f, -0.7f, -0.05f);
+        matrices.translate(0.0f, -0.7f, -0.15f);
 
         VertexConsumer vc = vertexConsumers.getBuffer(
                 RenderLayer.getEntityCutoutNoCull(HORN_TEXTURE));
