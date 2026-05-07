@@ -23,20 +23,17 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
     private static final Identifier HORN_TEXTURE =
             Identifier.of(OpPickaxeMod.MOD_ID, "textures/entity/unicorn_horn.png");
 
-    /** The horse head model has a 30° (0.5236 rad) downward pitch baked into head_parts.
-     *  We subtract that here so the horn renders vertical at idle. Dynamic head pitch
-     *  (eating, looking up) still applies because we only undo the BASE pitch. */
     private static final float HORSE_HEAD_BASE_PITCH = 0.5235988f;
 
     private final ModelPart horn;
 
     public UnicornHornFeatureRenderer(FeatureRendererContext<HorseEntity, HorseEntityModel<HorseEntity>> context) {
         super(context);
-        // 2×6×2 px → 0.125 × 0.375 × 0.125 blocks (slim, ~head height)
+        // Smaller horn: 2x5x2 px → 0.125 x 0.3125 x 0.125 blocks (same height as the horse head)
         ModelData modelData = new ModelData();
         ModelPartData root = modelData.getRoot();
         root.addChild("horn",
-                ModelPartBuilder.create().uv(0, 0).cuboid(-1f, -6f, -1f, 2, 6, 2),
+                ModelPartBuilder.create().uv(0, 0).cuboid(-1f, -5f, -1f, 2, 5, 2),
                 ModelTransform.NONE);
         this.horn = TexturedModelData.of(modelData, 16, 16).createModel().getChild("horn");
     }
@@ -53,17 +50,20 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
 
         matrices.push();
 
-        // Anchor to the head bone so we follow grazing/jumping animations
+        // Anchor to the head bone (follows grazing/jumping animations).
         body.rotate(matrices);
         head.rotate(matrices);
 
-        // Counter the 30° base pitch baked into head_parts.
-        // Dynamic head pitch (head.pitch - base) still rotates the horn naturally.
+        // Counter the 30° base head pitch so the horn stands vertical at idle.
+        // Dynamic head pitch (looking up/down, eating) still applies.
         matrices.multiply(RotationAxis.POSITIVE_X.rotation(-HORSE_HEAD_BASE_PITCH));
 
-        // Position on the forehead, just above the head's top surface.
-        // Head local block space: top y=-0.6875, front z=-0.125, pivot at z=0.
-        matrices.translate(0.0f, -0.55f, -0.20f);
+        // head_parts pivot is at the lower neck/throat level, not the top of the head.
+        // The head cube extends UP from there: top is at y=-11 px = -0.6875 blocks (in head local).
+        // Translate up well past the head top so the horn BASE sits on the forehead surface.
+        // y: -1.10 → ~0.4 blocks above head top
+        // z: -0.10 → just inside the front face of the head (forehead)
+        matrices.translate(0.0f, -1.10f, -0.10f);
 
         VertexConsumer vc = vertexConsumers.getBuffer(
                 RenderLayer.getEntityCutoutNoCull(HORN_TEXTURE));
