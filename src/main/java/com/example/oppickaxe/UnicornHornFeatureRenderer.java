@@ -44,9 +44,9 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
         matrices.push();
 
         // Origin (0,0,0) is at the horse's back. Translate to the forehead:
-        //   Y: -0.30 → up to head top (negative Y = up after the LivingEntityRenderer Y-flip)
-        //   Z: +0.70 → forward toward the snout (+Z = horse forward after 180° body-yaw rotation)
-        matrices.translate(0.0f, -0.30f, 0.70f);
+        //   Y: -0.45 → up onto/above the head top (negative Y = up after Y-flip)
+        //   Z: -0.50 → forward toward the forehead (-Z = horse forward; +Z lands on the butt)
+        matrices.translate(0.0f, -0.45f, -0.50f);
 
         // Rotate with the head so the horn follows where the unicorn looks.
         // headYaw / headPitch arrive in degrees.
