@@ -1,13 +1,8 @@
 package com.example.oppickaxe;
 
-import net.minecraft.entity.AreaEffectCloudEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
@@ -21,15 +16,11 @@ public class FartCloudItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
         if (!world.isClient) {
-            AreaEffectCloudEntity cloud = new AreaEffectCloudEntity(world, user.getX(), user.getY(), user.getZ());
-            cloud.setRadius(3.0f);
-            cloud.setDuration(200);
-            cloud.addEffect(new StatusEffectInstance(StatusEffects.POISON, 100, 0));
-            cloud.addEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 100, 1));
-            world.spawnEntity(cloud);
-            // Fart sound on impact
-            world.playSound(null, user.getX(), user.getY(), user.getZ(),
-                    SoundEvents.ENTITY_COW_HURT, SoundCategory.PLAYERS, 1.0f, 0.3f);
+            FartCloudEntity entity = new FartCloudEntity(world, user);
+            entity.setItem(stack);
+            // pitch, yaw, roll, speed, divergence
+            entity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, 1.5f, 1.0f);
+            world.spawnEntity(entity);
             if (!user.getAbilities().creativeMode) {
                 stack.decrement(1);
             }
