@@ -26,14 +26,15 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
 
     public UnicornHornFeatureRenderer(FeatureRendererContext<HorseEntity, HorseEntityModel<HorseEntity>> context) {
         super(context);
-        // Proportional horn: 4×10×4 px → 0.25×0.625×0.25 blocks
-        // (about 2× the head's height, matches typical unicorn-horn proportions)
+        // Slim traditional unicorn horn: 2×8×2 px → 0.125×0.5×0.125 blocks.
+        // Horse head is 6×5×7 px (0.375×0.3125×0.4375 blocks), so horn is 1/3 head width
+        // and 1.6× head height — the classic Lisa-Frank unicorn proportions.
         ModelData modelData = new ModelData();
         ModelPartData root = modelData.getRoot();
         root.addChild("horn",
-                ModelPartBuilder.create().uv(0, 0).cuboid(-2f, -10f, -2f, 4, 10, 4),
+                ModelPartBuilder.create().uv(0, 0).cuboid(-1f, -8f, -1f, 2, 8, 2),
                 ModelTransform.NONE);
-        this.horn = TexturedModelData.of(modelData, 32, 32).createModel().getChild("horn");
+        this.horn = TexturedModelData.of(modelData, 16, 16).createModel().getChild("horn");
     }
 
     @Override
@@ -66,7 +67,9 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
         //
         // Place the horn just above the top of the head, at the front (forehead).
         // Translate to (0, -0.7, -0.05) in head-local block space.
-        matrices.translate(0.0f, -0.7f, -0.15f);
+        // y=-0.7 sits the base just above the head top (top is -0.6875 in head-local block).
+        // z=-0.08 places it on the forehead (head front face is z=-0.125, pivot at z=0).
+        matrices.translate(0.0f, -0.7f, -0.08f);
 
         VertexConsumer vc = vertexConsumers.getBuffer(
                 RenderLayer.getEntityCutoutNoCull(HORN_TEXTURE));
