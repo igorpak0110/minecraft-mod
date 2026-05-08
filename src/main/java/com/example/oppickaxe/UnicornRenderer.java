@@ -13,7 +13,7 @@ public class UnicornRenderer extends AbstractHorseEntityRenderer<HorseEntity, Ho
             Identifier.of("minecraft", "textures/entity/horse/horse_white.png");
 
     public UnicornRenderer(EntityRendererFactory.Context ctx) {
-        super(ctx, new HorseEntityModel<>(ctx.getPart(EntityModelLayers.HORSE)), 0.75f);
+        super(ctx, new HorseEntityModel<>(ctx.getPart(EntityModelLayers.HORSE)), 1.1f);
         this.addFeature(new UnicornHornFeatureRenderer(this));
     }
 
