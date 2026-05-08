@@ -26,11 +26,11 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
 
     public UnicornHornFeatureRenderer(FeatureRendererContext<HorseEntity, HorseEntityModel<HorseEntity>> context) {
         super(context);
-        // Slim pencil horn: 1×6×1 px → 0.0625 × 0.375 × 0.0625 blocks
+        // Shorter slim horn: 1×4×1 px → 0.0625 × 0.25 × 0.0625 blocks
         ModelData modelData = new ModelData();
         ModelPartData root = modelData.getRoot();
         root.addChild("horn",
-                ModelPartBuilder.create().uv(0, 0).cuboid(-0.5f, -6f, -0.5f, 1, 6, 1),
+                ModelPartBuilder.create().uv(0, 0).cuboid(-0.5f, -4f, -0.5f, 1, 4, 1),
                 ModelTransform.NONE);
         this.horn = TexturedModelData.of(modelData, 16, 16).createModel().getChild("horn");
     }
@@ -56,7 +56,7 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
         // Head cube extends y=-11..-6, z=-2..5 in head_parts pixel space.
         // Forehead = top-front corner = (0, -11, -2) px = (0, -0.6875, -0.125) blocks.
         // Position horn base just above-and-forward of that.
-        matrices.translate(0.0f, -0.70f, -0.20f);
+        matrices.translate(0.0f, -0.70f, -0.10f);
 
         VertexConsumer vc = vertexConsumers.getBuffer(
                 RenderLayer.getEntityCutoutNoCull(HORN_TEXTURE));
