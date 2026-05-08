@@ -17,23 +17,20 @@ import net.minecraft.client.render.entity.model.HorseEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
 
 public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, HorseEntityModel<HorseEntity>> {
     private static final Identifier HORN_TEXTURE =
             Identifier.of(OpPickaxeMod.MOD_ID, "textures/entity/unicorn_horn.png");
 
-    private static final float HORSE_HEAD_BASE_PITCH = (float) (Math.PI / 6); // 30°
-
     private final ModelPart horn;
 
     public UnicornHornFeatureRenderer(FeatureRendererContext<HorseEntity, HorseEntityModel<HorseEntity>> context) {
         super(context);
-        // 2x5x2 px → 0.125 × 0.3125 × 0.125 blocks
+        // Slim pencil horn: 1×6×1 px → 0.0625 × 0.375 × 0.0625 blocks
         ModelData modelData = new ModelData();
         ModelPartData root = modelData.getRoot();
         root.addChild("horn",
-                ModelPartBuilder.create().uv(0, 0).cuboid(-1f, -5f, -1f, 2, 5, 2),
+                ModelPartBuilder.create().uv(0, 0).cuboid(-0.5f, -6f, -0.5f, 1, 6, 1),
                 ModelTransform.NONE);
         this.horn = TexturedModelData.of(modelData, 16, 16).createModel().getChild("horn");
     }
@@ -49,17 +46,17 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
 
         matrices.push();
 
-        // head_parts is a CHILD OF ROOT (sibling of body), not nested under body.
-        // Only call head.rotate() — calling body.rotate() first was double-compounding transforms.
+        // head_parts is a child of root. Just call head.rotate() — applies its pivot
+        // (0, 4, -12 px) AND the +30° X base pitch, plus any dynamic head movement.
+        // No counter-rotation: the horn extends in head's tilted "up" direction, which
+        // is naturally perpendicular to the forehead surface (the forehead is angled
+        // forward 30° because of the head's pitch).
         head.rotate(matrices);
 
-        // Cancel head_parts's baked 30° pitch so the horn stands vertical at idle
-        // (dynamic pitch from setAngles still applies).
-        matrices.multiply(RotationAxis.POSITIVE_X.rotation(-HORSE_HEAD_BASE_PITCH));
-
-        // Forehead = top-front corner of head cube = (0, -11px, -2px) = (0, -0.6875, -0.125) blocks
-        // Place horn base just slightly above the head's top surface and at the front.
-        matrices.translate(0.0f, -0.70f, -0.10f);
+        // Head cube extends y=-11..-6, z=-2..5 in head_parts pixel space.
+        // Forehead = top-front corner = (0, -11, -2) px = (0, -0.6875, -0.125) blocks.
+        // Position horn base just above-and-forward of that.
+        matrices.translate(0.0f, -0.70f, -0.20f);
 
         VertexConsumer vc = vertexConsumers.getBuffer(
                 RenderLayer.getEntityCutoutNoCull(HORN_TEXTURE));
