@@ -54,16 +54,11 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
         body.rotate(matrices);
         head.rotate(matrices);
 
-        // Counter the 30° base head pitch so the horn stands vertical at idle.
-        // Dynamic head pitch (looking up/down, eating) still applies.
-        matrices.multiply(RotationAxis.POSITIVE_X.rotation(-HORSE_HEAD_BASE_PITCH));
-
-        // head_parts pivot is at the lower neck/throat level, not the top of the head.
-        // The head cube extends UP from there: top is at y=-11 px = -0.6875 blocks (in head local).
-        // Translate up well past the head top so the horn BASE sits on the forehead surface.
-        // y: -1.10 → ~0.4 blocks above head top
-        // z: -0.10 → just inside the front face of the head (forehead)
-        matrices.translate(0.0f, -0.85f, -0.25f);
+        // Letting the horn ride the head's natural 30° tilt — counter-rotation made it worse.
+        // Translate in head-local rotated space:
+        //   y: more negative = up along head's tilted "up" axis
+        //   z: more negative = forward toward snout
+        matrices.translate(0.0f, -1.0f, -0.10f);
 
         VertexConsumer vc = vertexConsumers.getBuffer(
                 RenderLayer.getEntityCutoutNoCull(HORN_TEXTURE));
