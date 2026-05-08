@@ -54,11 +54,9 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
         body.rotate(matrices);
         head.rotate(matrices);
 
-        // Letting the horn ride the head's natural 30° tilt — counter-rotation made it worse.
-        // Translate in head-local rotated space:
-        //   y: more negative = up along head's tilted "up" axis
-        //   z: more negative = forward toward snout
-        matrices.translate(0.0f, -1.0f, -0.10f);
+        // DEBUG: counter-rotate the 30° base pitch, then NO translate.
+        // Whatever position the horn lands at = head_parts pivot in world (rotation-cancelled).
+        matrices.multiply(RotationAxis.POSITIVE_X.rotation(-HORSE_HEAD_BASE_PITCH));
 
         VertexConsumer vc = vertexConsumers.getBuffer(
                 RenderLayer.getEntityCutoutNoCull(HORN_TEXTURE));
