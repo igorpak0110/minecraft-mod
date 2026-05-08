@@ -23,13 +23,13 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
     private static final Identifier HORN_TEXTURE =
             Identifier.of(OpPickaxeMod.MOD_ID, "textures/entity/unicorn_horn.png");
 
-    private static final float HORSE_HEAD_BASE_PITCH = 0.5235988f;
+    private static final float HORSE_HEAD_BASE_PITCH = (float) (Math.PI / 6); // 30°
 
     private final ModelPart horn;
 
     public UnicornHornFeatureRenderer(FeatureRendererContext<HorseEntity, HorseEntityModel<HorseEntity>> context) {
         super(context);
-        // Smaller horn: 2x5x2 px → 0.125 x 0.3125 x 0.125 blocks (same height as the horse head)
+        // 2x5x2 px → 0.125 × 0.3125 × 0.125 blocks
         ModelData modelData = new ModelData();
         ModelPartData root = modelData.getRoot();
         root.addChild("horn",
@@ -45,18 +45,21 @@ public class UnicornHornFeatureRenderer extends FeatureRenderer<HorseEntity, Hor
         if (entity.isBaby()) return;
 
         HorseEntityModelAccessor accessor = (HorseEntityModelAccessor) this.getContextModel();
-        ModelPart body = accessor.getBody();
         ModelPart head = accessor.getHead();
 
         matrices.push();
 
-        // Anchor to the head bone (follows grazing/jumping animations).
-        body.rotate(matrices);
+        // head_parts is a CHILD OF ROOT (sibling of body), not nested under body.
+        // Only call head.rotate() — calling body.rotate() first was double-compounding transforms.
         head.rotate(matrices);
 
-        // DEBUG: counter-rotate the 30° base pitch, then NO translate.
-        // Whatever position the horn lands at = head_parts pivot in world (rotation-cancelled).
+        // Cancel head_parts's baked 30° pitch so the horn stands vertical at idle
+        // (dynamic pitch from setAngles still applies).
         matrices.multiply(RotationAxis.POSITIVE_X.rotation(-HORSE_HEAD_BASE_PITCH));
+
+        // Forehead = top-front corner of head cube = (0, -11px, -2px) = (0, -0.6875, -0.125) blocks
+        // Place horn base just slightly above the head's top surface and at the front.
+        matrices.translate(0.0f, -0.70f, -0.10f);
 
         VertexConsumer vc = vertexConsumers.getBuffer(
                 RenderLayer.getEntityCutoutNoCull(HORN_TEXTURE));
