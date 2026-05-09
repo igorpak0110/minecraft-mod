@@ -7,6 +7,8 @@ import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 public class ClientInit implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        RainbowSkyRenderer.register();
+
         // Unicorn uses our custom renderer that adds the horn feature
         EntityRendererRegistry.register(OpPickaxeMod.UNICORN, UnicornRenderer::new);
 
