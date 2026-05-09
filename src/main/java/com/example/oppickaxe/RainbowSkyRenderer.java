@@ -27,7 +27,10 @@ public final class RainbowSkyRenderer {
     private static final float HEIGHT = 240.0f;     // arch peak height (blocks)
 
     public static void register() {
-        WorldRenderEvents.LAST.register(RainbowSkyRenderer::render);
+        // BEFORE_ENTITIES fires AFTER terrain has written depth — so the rainbow
+        // (rendered with depth test on but depth write off) gets correctly occluded
+        // by terrain/blocks/mobs while still showing through the sky.
+        WorldRenderEvents.BEFORE_ENTITIES.register(RainbowSkyRenderer::render);
     }
 
     private static void render(WorldRenderContext context) {
@@ -64,8 +67,9 @@ public final class RainbowSkyRenderer {
         RenderSystem.setShaderTexture(0, RAINBOW_TEXTURE);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
+        RenderSystem.enableDepthTest();   // explicitly on — terrain depth occludes rainbow
+        RenderSystem.depthMask(false);    // don't WRITE depth — rainbow won't occlude entities/translucents
         RenderSystem.disableCull();
-        RenderSystem.depthMask(false); // don't write to depth (rainbow shouldn't occlude things)
 
         BufferRenderer.drawWithGlobalProgram(buffer.end());
 
