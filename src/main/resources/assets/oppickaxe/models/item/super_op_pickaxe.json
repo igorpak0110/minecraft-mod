@@ -1,6 +1,6 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "item:netherite_pickaxe"
+    "layer0": "oppickaxe:item/super_op_pickaxe"
   }
 }

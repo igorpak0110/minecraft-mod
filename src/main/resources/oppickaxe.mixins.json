@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.example.oppickaxe.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [],
+  "client": [
+    "HorseEntityModelAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

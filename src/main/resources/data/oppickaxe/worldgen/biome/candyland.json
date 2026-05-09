@@ -1,0 +1,32 @@
+{
+  "temperature": 0.9,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 16761035,
+    "fog_color": 16758465,
+    "water_color": 16738740,
+    "water_fog_color": 16738740,
+    "grass_color": 16748231,
+    "foliage_color": 16748231,
+    "mood_sound": {
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "spawners": {
+    "monster": [],
+    "creature": [{"type": "oppickaxe:unicorn", "weight": 10, "minCount": 2, "maxCount": 4}],
+    "ambient": [],
+    "axolotls": [],
+    "underground_water_creature": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  },
+  "spawn_costs": {},
+  "carvers": {},
+  "features": [[], [], [], [], [], [], ["oppickaxe:candy_surface"], [], [], ["oppickaxe:lollipop", "oppickaxe:candy_cane", "oppickaxe:cotton_candy_tree", "oppickaxe:rainbow_path", "oppickaxe:ice_cream_hill", "oppickaxe:candy_castle"]]
+}

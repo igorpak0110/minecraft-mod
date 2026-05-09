@@ -2,18 +2,25 @@
   "schemaVersion": 1,
   "id": "oppickaxe",
   "version": "${version}",
-  "name": "Super OP Pickaxe",
-  "description": "Adds a ridiculously overpowered pickaxe that instant-breaks blocks in a 3x3 area.",
-  "authors": ["You"],
+  "name": "Mods by Igor Pak",
+  "description": "A collection of custom Minecraft mods by IgorPak.",
+  "authors": ["IgorPak"],
   "license": "MIT",
   "environment": "*",
+  "accessWidener": "oppickaxe.accesswidener",
+  "mixins": [
+    "oppickaxe.mixins.json"
+  ],
   "entrypoints": {
-    "main": ["com.example.oppickaxe.OpPickaxeMod"]
+    "main": ["com.example.oppickaxe.OpPickaxeMod"],
+    "client": ["com.example.oppickaxe.ClientInit"],
+    "terrablender": ["com.example.oppickaxe.CandylandBiomes"]
   },
   "depends": {
     "fabricloader": ">=0.16.0",
     "minecraft": "~1.21.1",
     "java": ">=21",
-    "fabric-api": "*"
+    "fabric-api": "*",
+    "terrablender": "*"
   }
 }
